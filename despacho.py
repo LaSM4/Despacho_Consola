@@ -8,6 +8,7 @@ AMARILLO = '\033[93m'
 ROJO = '\033[91m'
 CYAN = '\033[96m'
 RESET = '\033[0m'
+MARGEN = ' ' * 14
 
 
 def crear_pila():
@@ -25,16 +26,52 @@ def push_pila(pila, caja):
     pila.append(caja)
 
 
+def pop_pila(pila):
+    """Retiramos la caja de la cima"""
+    if pila_vacia(pila):
+        return None
+    return pila.pop()
+
+
+class Queue:
+    """creamos el objeto"""
+
+    def __init__(self):
+        """Creamos el constructor"""
+        self.queue = []
+
+    def is_empty(self):
+        """Revisamos si la cola está vacia"""
+        return len(self.queue) == 0
+
+    def enqueue(self, camion):
+        """metodo de inicio de cola"""
+        self.queue.append(camion)
+
+    def dequeue(self):
+        """metodo para desencolar o despachar el camion"""
+        if self.is_empty():
+            return None
+        return self.queue.pop(0)
+
+
 def menu_inicio():
     """Mostrar el menu principal en la consola"""
 
     almacen_cajas = crear_pila()
+    fila_camiones = Queue()
 
     while True:
+        titulo = "BIENVENIDO AL SISTEMA DE DESPACHO Y ALMACÉN"
         print(f"""{CYAN}{BOLD}
-              == == == == == == == == == == == == == == == ==
-              BIENVENIDO AL SISTEMA DE DESPACHO Y ALMACÉN
-              == == == == == == == == == == == == == == == =={RESET}
+              == == == == == == == == == == == == == == == == == ==
+                {titulo:^47}
+                         _______________________
+                        |LOGISTICA              |h_ __
+                        |                       ||=|##L_
+                        |________________.====._||_|__._]
+                        `(_)(_)`       `(_)(_)'''='=(_)
+              == == == == == == == == == == == == == == == == == =={RESET}
 
               {AMARILLO}1. Apilar caja
               2. Retirar caja{RESET}
@@ -42,35 +79,70 @@ def menu_inicio():
               4. Despachar primer camión{RESET}
               {MAGENTA}5. Ver estado del almacén y camiones{RESET}
               {GRIS}6. Salir del programa{RESET}
-              {CYAN}-----------------------------------------------{RESET}
+              {CYAN}{BOLD}--------------------------------------------------{RESET}
               """)
 
-        opcion = input(f"{BOLD}Seleccione una opción (1 - 6): {RESET}")
+        opcion = input(
+            f"{MARGEN}{BOLD}Seleccione una opción (1 - 6): {RESET}")
 
         if opcion == "1":
-            print("\nApilando caja...")
+            print(f"\n{MARGEN}Apilando caja...")
             nueva_caja = input(
-                "\nAgregue el identificador de la caja (Ej.: Caja-101): ")
+                f"\n{MARGEN}Agregue el identificador de la caja "
+                f"(Ej.: Caja-101): ")
             push_pila(almacen_cajas, nueva_caja)
-            print(f"{VERDE} Caja {nueva_caja} apilada correctamente! {RESET}")
-        elif opcion == "2":
-            print("""
-            Retirando caja de la cima...""")
-        elif opcion == "3":
-            print("""
-            Agregando camion a la fila...""")
-        elif opcion == "4":
-            print("""
-            Despachando camión...""")
-        elif opcion == "5":
             print(
-                f"\n{MAGENTA}Estado actual del almacén: {almacen_cajas[::-1]}{RESET}")
+                f"\n{MARGEN}{VERDE}La Caja ID: {nueva_caja}, "
+                f"fue apilada correctamente!{RESET}")
+        elif opcion == "2":
+            print(f"\n{MARGEN}Retirando caja de la cima...")
+            caja_retirada = pop_pila(almacen_cajas)
+            if caja_retirada is None:
+                print(
+                    f"\n{MARGEN}{ROJO}[!] Error: El almacén está vacío "
+                    f"(no hay cajas que retirar).{RESET}")
+            else:
+                print(
+                    f"\n{MARGEN}{VERDE}Caja ID: {caja_retirada}, "
+                    f"fue retirada de la cima{RESET}")
+        elif opcion == "3":
+            print(f"\n{MARGEN}Agregando camión a la fila...")
+            nuevo_camion = input(
+                f"\n{MARGEN}Agregue el identificador del camión "
+                f"(Ej.: Camion-Alfa): ")
+            fila_camiones.enqueue(nuevo_camion)
+            print(
+                f"\n{MARGEN}{VERDE}Camión ID: {nuevo_camion}, "
+                f"agregado en la fila{RESET}")
+        elif opcion == "4":
+            print(f"\n{MARGEN}Despachando camión...")
+            camion_despachado = fila_camiones.dequeue()
+            if camion_despachado is None:
+                print(
+                    f"\n{MARGEN}{ROJO}[!] Error: "
+                    f"No hay camiones esperando turno.{RESET}")
+            else:
+                print(
+                    f"\n{MARGEN}{VERDE}Camión ID: {camion_despachado} "
+                    f"fue despachado exitosamente!{RESET}")
+        elif opcion == "5":
+            cajas_cima_base = almacen_cajas[::-1]
+            camiones_frente_fin = fila_camiones.queue
+            print(
+                f"""{MAGENTA}
+              ---------------------------------------------------
+              ESTADO ACTUAL:
+              - Cajas apiladas (Cima -> Base): {cajas_cima_base}
+              - Fila de camiones (Frente -> Fin): {camiones_frente_fin}
+              ---------------------------------------------------{RESET}
+              """)
         elif opcion == "6":
-            print("""
-            Saliendo del sistema...""")
+            print(f"\n{MARGEN}{ROJO}Hasta pronto!\n{RESET}")
             break
         else:
-            print(f"{ROJO}Opción inválida. Inténtelo de nuevo por favor{RESET}")
+            print(
+                f"\n{MARGEN}{ROJO}Opción inválida. "
+                f"Inténtelo de nuevo por favor{RESET}")
 
 
 if __name__ == "__main__":
