@@ -1,5 +1,7 @@
 """Simulador CLI de Pilas y Colas"""
 
+import os
+
 VERDE = '\033[92m'
 BOLD = '\033[1m'
 GRIS = '\033[90m'
@@ -9,6 +11,11 @@ ROJO = '\033[91m'
 CYAN = '\033[96m'
 RESET = '\033[0m'
 MARGEN = ' ' * 14
+
+
+def limpiar_pantalla():
+    """Limpia la consola según el sistema operativo"""
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def crear_pila():
@@ -62,6 +69,7 @@ def menu_inicio():
     fila_camiones = Queue()
 
     while True:
+        limpiar_pantalla()
         titulo = "BIENVENIDO AL SISTEMA DE DESPACHO Y ALMACÉN"
         print(f"""{CYAN}{BOLD}
               == == == == == == == == == == == == == == == == == ==
@@ -143,6 +151,8 @@ def menu_inicio():
             print(
                 f"\n{MARGEN}{ROJO}Opción inválida. "
                 f"Inténtelo de nuevo por favor{RESET}")
+
+        input(f"\n{MARGEN}{GRIS}Presione Enter para continuar...{RESET}")
 
 
 if __name__ == "__main__":
