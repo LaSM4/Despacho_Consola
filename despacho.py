@@ -98,10 +98,18 @@ def menu_inicio():
             nueva_caja = input(
                 f"\n{MARGEN}Agregue el identificador de la caja "
                 f"(Ej.: Caja-101): ")
-            push_pila(almacen_cajas, nueva_caja)
-            print(
-                f"\n{MARGEN}{VERDE}La Caja ID: {nueva_caja}, "
-                f"fue apilada correctamente!{RESET}")
+            if len(nueva_caja) <= 40 and (nueva_caja.replace(".", "")
+                                                    .replace("/", "")
+                                                    .replace(";", "")
+                                                    .replace(":", "")
+                                                    .replace("-", "")
+                                                    .replace("_", "")).isalnum():
+                push_pila(almacen_cajas, nueva_caja)
+                print(
+                    f"\n{MARGEN}{VERDE}La Caja ID: {nueva_caja}, "
+                    f"fue apilada correctamente!{RESET}")
+            else:
+                print(f"\n{MARGEN}{ROJO}[!] Error: Máx. 40 caracteres.{RESET}")
         elif opcion == "2":
             print(f"\n{MARGEN}Retirando caja de la cima...")
             caja_retirada = pop_pila(almacen_cajas)
